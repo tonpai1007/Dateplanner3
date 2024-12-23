@@ -1,0 +1,101 @@
+/* Flower Animation Styles */
+.flower {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    pointer-events: none;
+}
+
+.flower::before {
+    content: '🌸';
+    font-size: 20px;
+}
+
+.petal {
+    position: absolute;
+    width: 10px;
+    height: 20px;
+    background: #ffb7c5;
+    border-radius: 10px 0;
+    transform-origin: bottom center;
+}
+
+.flower-animated {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+}
+
+.flower-center {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: #ffef9f;
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* Animation keyframes */
+@keyframes fall {
+    0% { 
+        transform: translateY(-100vh) rotate(0deg);
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.8;
+    }
+    100% { 
+        transform: translateY(100vh) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+@keyframes sway {
+    0%, 100% { transform: translateX(0px) rotate(0deg); }
+    50% { transform: translateX(20px) rotate(15deg); }
+}
+
+@keyframes petalSpin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes petalFade {
+    0% { opacity: 1; transform: scale(1); }
+    100% { opacity: 0; transform: scale(0.3); }
+}
+
+/* Special effects classes */
+.flower-rain {
+    animation: 
+        fall 6s linear,
+        sway 3s ease-in-out infinite;
+}
+
+.flower-spin {
+    animation: petalSpin 2s linear infinite;
+}
+
+.flower-burst {
+    position: absolute;
+    animation: petalFade 1s forwards;
+}
+
+/* Seasonal variations */
+.flower-spring {
+    filter: hue-rotate(45deg);
+}
+
+.flower-summer {
+    filter: hue-rotate(90deg);
+}
+
+.flower-autumn {
+    filter: hue-rotate(180deg);
+}
+
+.flower-winter {
+    filter: hue-rotate(270deg);
+}

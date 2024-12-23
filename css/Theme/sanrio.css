@@ -1,0 +1,57 @@
+:root {
+    /* Kuromi Theme Colors */
+    --kuromi-primary: #9b26b6;
+    --kuromi-secondary: #ff69b4;
+    --kuromi-accent: #f7c7db;
+    --kuromi-dark: #4a0072;
+    --kuromi-light: #fce4ec;
+    
+    /* Theme Gradients */
+    --kuromi-gradient: linear-gradient(135deg, var(--kuromi-primary), var(--kuromi-secondary));
+    --kuromi-bg-gradient: linear-gradient(180deg, var(--kuromi-light) 0%, #ffffff 100%);
+    
+    /* Theme Shadows */
+    --kuromi-shadow: 0 4px 15px rgba(155, 38, 182, 0.2);
+    --kuromi-hover-shadow: 0 6px 20px rgba(155, 38, 182, 0.3);
+}
+
+/* Theme Base Styles */
+body {
+    background: var(--kuromi-bg-gradient);
+    color: var(--kuromi-dark);
+}
+
+/* Theme Components */
+.planner {
+    border: 2px solid var(--kuromi-accent);
+    box-shadow: var(--kuromi-shadow);
+}
+
+.button {
+    background: var(--kuromi-gradient);
+    color: white;
+}
+
+.button:hover {
+    box-shadow: var(--kuromi-hover-shadow);
+}
+
+/* Calendar Theme */
+.calendar-day {
+    border: 1px solid var(--kuromi-accent);
+}
+
+.calendar-day.active {
+    background: var(--kuromi-primary);
+    color: white;
+}
+
+/* Input Theme */
+.input {
+    border: 2px solid var(--kuromi-accent);
+}
+
+.input:focus {
+    border-color: var(--kuromi-primary);
+    box-shadow: 0 0 0 3px var(--kuromi-accent);
+}

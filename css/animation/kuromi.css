@@ -1,0 +1,143 @@
+/* Kuromi Character Base */
+.kuromi {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 150px;
+    height: 150px;
+    z-index: 1000;
+    cursor: pointer;
+    transform-origin: center bottom;
+}
+
+/* Kuromi's Hat Animation */
+.kuromi-hat {
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    height: 40px;
+    transform-origin: center bottom;
+}
+
+/* Kuromi's Expression States */
+.kuromi-face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-size: contain;
+    background-repeat: no-repeat;
+    transition: opacity 0.3s ease;
+}
+
+/* Kuromi's Basic Animations */
+@keyframes kuromiFloat {
+    0%, 100% {
+        transform: translateY(0) rotate(-2deg);
+    }
+    50% {
+        transform: translateY(-10px) rotate(2deg);
+    }
+}
+
+@keyframes kuromiJump {
+    0%, 100% {
+        transform: translateY(0) scaleY(1);
+    }
+    40% {
+        transform: translateY(-30px) scaleY(0.9);
+    }
+    60% {
+        transform: translateY(-30px) scaleY(0.9);
+    }
+    80% {
+        transform: translateY(0) scaleY(1.1);
+    }
+}
+
+@keyframes kuromiSpin {
+    0% { transform: rotate(0deg) scale(1); }
+    50% { transform: rotate(180deg) scale(0.8); }
+    100% { transform: rotate(360deg) scale(1); }
+}
+
+@keyframes kuromiWave {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-20deg); }
+    75% { transform: rotate(20deg); }
+}
+
+/* Kuromi's Mood States */
+.kuromi-happy {
+    animation: kuromiJump 0.8s ease-in-out;
+}
+
+.kuromi-excited {
+    animation: kuromiSpin 1s ease-in-out;
+}
+
+.kuromi-greeting {
+    animation: kuromiWave 1s ease-in-out infinite;
+}
+
+.kuromi-idle {
+    animation: kuromiFloat 3s ease-in-out infinite;
+}
+
+/* Kuromi's Speech Bubble */
+.kuromi-speech {
+    position: absolute;
+    background: #ffffff;
+    border: 3px solid #9b26b6;
+    border-radius: 20px;
+    padding: 15px;
+    bottom: 120%;
+    right: 0;
+    width: 200px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.3s ease;
+}
+
+.kuromi-speech::after {
+    content: '';
+    position: absolute;
+    bottom: -15px;
+    right: 20px;
+    width: 0;
+    height: 0;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    border-top: 15px solid #9b26b6;
+}
+
+.kuromi-speech.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Kuromi's Accessories */
+.kuromi-ribbon {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    width: 30px;
+    height: 30px;
+    transform-origin: center;
+    animation: ribbonSway 2s ease-in-out infinite;
+}
+
+@keyframes ribbonSway {
+    0%, 100% { transform: rotate(-5deg); }
+    50% { transform: rotate(5deg); }
+}
+
+/* Interactive States */
+.kuromi:hover {
+    animation: kuromiFloat 3s ease-in-out infinite;
+}
+
+.kuromi:active {
+    animation: kuromiJump 0.8s ease-in-out;
+}

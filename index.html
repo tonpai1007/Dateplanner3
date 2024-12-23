@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cute Date Planner with Kuromi</title>
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: linear-gradient(180deg, #ffe6f2 0%, #fff5f9 100%);
+            font-family: 'Arial', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+        }
+
+        .kuromi {
+            width: 200px;
+            height: 200px;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: url('C:\Users\Tonpa\OneDrive\Desktop\New folder\download.jpg') no-repeat center;
+            background-size: contain;
+            animation: bounce 2s infinite;
+            transition: transform 0.3s;
+            cursor: pointer;
+            z-index: 1000;
+        }
+
+        .kuromi:hover {
+            transform: scale(1.1);
+        }
+
+        .speech-bubble {
+            display: none;
+            position: fixed;
+            bottom: 230px;
+            right: 50px;
+            background: white;
+            padding: 15px;
+            border-radius: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            max-width: 200px;
+            z-index: 1000;
+        }
+
+        .speech-bubble:after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            right: 20px;
+            border-width: 10px 10px 0;
+            border-style: solid;
+            border-color: white transparent;
+        }
+
+        .flower {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            pointer-events: none;
+        }
+
+        .flower::before {
+            content: '🌸';
+            font-size: 20px;
+        }
+
+        .sparkle {
+            position: absolute;
+            pointer-events: none;
+            animation: sparkle 1s forwards;
+            font-size: 20px;
+        }
+
+        @keyframes sparkle {
+            0% { transform: scale(0) rotate(0deg); opacity: 1; }
+            100% { transform: scale(1.5) rotate(180deg); opacity: 0; }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(-100vh) rotate(0deg); }
+            100% { transform: translateY(100vh) rotate(360deg); }
+        }
+
+        .planner {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            transition: transform 0.3s;
+        }
+
+        .planner:hover {
+            transform: translateY(-5px);
+        }
+
+        .date-input, .event-input, .category-select {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 2px solid #ffb6c1;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .date-input:focus, .event-input:focus, .category-select:focus {
+            outline: none;
+            border-color: #ff69b4;
+            box-shadow: 0 0 5px rgba(255, 105, 180, 0.3);
+        }
+
+        .add-btn {
+            background: #ff69b4;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+            display: block;
+            width: 100%;
+            margin-top: 15px;
+        }
+
+        .add-btn:hover {
+            background: #ff1493;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(255, 105, 180, 0.3);
+        }
+
+        .events-list {
+            margin-top: 20px;
+        }
+
+        .event-item {
+            background: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(-100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .event-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .event-category {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-right: 10px;
+            color: white;
+        }
+
+        .category-birthday { background: #ff69b4; }
+        .category-meeting { background: #4169e1; }
+        .category-party { background: #9932cc; }
+        .category-other { background: #20b2aa; }
+
+        .delete-btn {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .delete-btn:hover {
+            background: #ff4444;
+            transform: scale(1.1);
+        }
+
+        h1 {
+            color: #ff69b4;
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            animation: titleBounce 1s ease-out;
+        }
+
+        @keyframes titleBounce {
+            0% { transform: translateY(-50px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        .calendar-view {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            margin-top: 10px;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff5f9;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .calendar-day:hover {
+            background: #ffe6f2;
+            transform: scale(1.1);
+        }
+
+        .calendar-day.has-event {
+            background: #ff69b4;
+            color: white;
+        } 
+        
+    </style>
+    <link rel="stylesheet" href="flower-animations.css">
+    <link rel="stylesheet" href="character-animations.css">
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+    <div class="container">
+        <h1>✨ Cute Date Planner ✨</h1>
+        <div class="planner">
+            <input type="date" class="date-input" id="dateInput">
+            <input type="text" class="event-input" id="eventInput" placeholder="Enter your event...">
+            <select class="category-select" id="categorySelect">
+                <option value="birthday">Birthday 🎂</option>
+                <option value="meeting">Meeting 📚</option>
+                <option value="party">Party 🎉</option>
+                <option value="other">Other ✨</option>
+            </select>
+            <button class="add-btn" onclick="addEvent()">Add Event 💖</button>
+            <div class="events-list" id="eventsList"></div>
+        </div>
+        <div class="calendar-view">
+            <h2>Monthly View 📅</h2>
+            <div class="calendar-grid" id="calendarGrid"></div>
+        </div>
+    </div>
+    <div class="kuromi" onclick="toggleSpeechBubble()"></div>
+    <div class="speech-bubble" id="speechBubble">Hello! I'm Kuromi! Let's plan something fun together! 💕</div>
+
+    <script>
+        // Create falling flowers animation
+        function createFlower() {
+            const flower = document.createElement('div');
+            flower.className = 'flower';
+            flower.style.left = Math.random() * window.innerWidth + 'px';
+            flower.style.animation = `fall ${Math.random() * 10 + 5}s linear`;
+            document.body.appendChild(flower);
+
+            flower.addEventListener('animationend', () => {
+                flower.remove();
+            });
+        }
+
+        // Create sparkle effect
+        function createSparkle(x, y) {
+            const sparkle = document.createElement('div');
+            sparkle.className = 'sparkle';
+            sparkle.textContent = '✨';
+            sparkle.style.left = x + 'px';
+            sparkle.style.top = y + 'px';
+            document.body.appendChild(sparkle);
+
+            sparkle.addEventListener('animationend', () => {
+                sparkle.remove();
+            });
+        }
+
+        // Toggle Kuromi's speech bubble
+        function toggleSpeechBubble() {
+            const bubble = document.getElementById('speechBubble');
+            bubble.style.display = bubble.style.display === 'none' ? 'block' : 'none';
+            createSparkle(event.clientX, event.clientY);
+        }
+
+        // Generate flowers periodically
+        setInterval(createFlower, 2000);
+
+        // Event handling
+        function addEvent() {
+            const dateInput = document.getElementById('dateInput');
+            const eventInput = document.getElementById('eventInput');
+            const categorySelect = document.getElementById('categorySelect');
+            const eventsList = document.getElementById('eventsList');
+
+            if (!dateInput.value || !eventInput.value) {
+                alert('Please fill in both date and event! 🌸');
+                return;
+            }
+
+            const eventItem = document.createElement('div');
+            eventItem.className = 'event-item';
+            
+            const date = new Date(dateInput.value);
+            const formattedDate = date.toLocaleDateString('en-US', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+
+            eventItem.innerHTML = `
+                <div>
+                    <span class="event-category category-${categorySelect.value}">${categorySelect.value}</span>
+                    <strong>${formattedDate}</strong><br>
+                    ${eventInput.value}
+                </div>
+                <button class="delete-btn" onclick="deleteEvent(this)">✖️</button>
+            `;
+
+            eventsList.appendChild(eventItem);
+            eventInput.value = '';
+
+            // Add visual effects
+            createSparkle(event.clientX, event.clientY);
+            for(let i = 0; i < 3; i++) {
+                createFlower();
+            }
+
+            updateCalendar();
+            saveEvents();
+        }
+
+        function deleteEvent(button) {
+            button.parentElement.style.animation = 'slideIn 0.3s ease-out reverse';
+            setTimeout(() => {
+                button.parentElement.remove();
+                updateCalendar();
+                saveEvents();
+            }, 300);
+        }
+
+        // Calendar functionality
+        function updateCalendar() {
+            const calendarGrid = document.getElementById('calendarGrid');
+            calendarGrid.innerHTML = '';
+            
+            const currentDate = new Date();
+            const daysInMonth = new Date(
+                currentDate.getFullYear(),
+                currentDate.getMonth() + 1,
+                0
+            ).getDate();
+
+            for(let i = 1; i <= daysInMonth; i++) {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day';
+                dayElement.textContent = i;
+                
+                // Check if day has events
+                const hasEvents = checkDayForEvents(i);
+                if(hasEvents) {
+                    dayElement.classList.add('has-event');
+                }
+                
+                calendarGrid.appendChild(dayElement);
+            }
+        }
+
+        function checkDayForEvents(day) {
+            const events = document.querySelectorAll('.event-item');
+            for(const event of events) {
+                const dateStr = event.querySelector('strong').textContent;
+                const eventDate = new Date(dateStr);
+                if(eventDate.getDate() === day) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        // Save events to localStorage
+        function saveEvents() {
+            const eventsList = document.getElementById('eventsList');
+            const events = eventsList.innerHTML;
+            localStorage.setItem('plannerEvents', events);
+        }
+
+        // Load events from localStorage
+        function loadEvents() {
+            const eventsList = document.getElementById('eventsList');
+            const savedEvents = localStorage.getItem('plannerEvents');
+            if (savedEvents) {
+                eventsList.innerHTML = savedEvents;
+                updateCalendar();
+            }
+        }
+
+        // Initialize
+        window.onload = function() {
+            loadEvents();
+            updateCalendar();
+        };
+    </script>
+     <script type="module" src="animations.js"></script>
+     <script type="module" src="script.js"></script>
+</body>
+</html>
